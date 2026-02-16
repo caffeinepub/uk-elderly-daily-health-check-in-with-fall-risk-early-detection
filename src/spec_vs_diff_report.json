@@ -1,0 +1,90 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-13T11:50:13.433Z",
+  "summary": "Diff adds a new Motoko backend actor with profile + check-in types and some APIs, plus a React frontend with Internet Identity auth gating, onboarding/check-in/risk/history routes, accessibility settings, UK-local date helper, UK-focused guidance/disclaimer copy, and themed high-contrast large-type styling. However, backend upgrade-safe stable storage is not evidenced, and the backend appears to introduce unrequested admin/secret-token access control and additional backend modules that may violate the single-actor-file constraint. Several required backend APIs and risk computation details are truncated/not evidenced.",
+  "missing_requirements": [
+    {
+      "id": "REQ-3",
+      "requirement": "Backend exposes an API that returns the computed risk result for a given check-in, with deterministic rules-based scoring configurable in backend constants; UI shows score/level/factors after submission.",
+      "reason": "Frontend expects risk-related endpoints (e.g., getCurrentRiskAssessment, getRiskHistory), but the backend diff is truncated before showing any risk scoring rules/constants and before showing an API that computes/returns risk for a specific check-in. Risk computation implementation is not evidenced in the shown backend content.",
+      "evidence": [
+        "backend/main.mo (truncated before any risk scoring/constants or risk API details)",
+        "frontend/src/hooks/useQueries.ts (calls actor.getCurrentRiskAssessment(), actor.getRiskHistory(...))"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "requirement": "Backend must use Motoko stable storage for user profile and check-ins with upgrade safety considered (stable vars, migrations if needed).",
+      "reason": "The backend shows in-memory `var nextCheckInId` and non-stable `let userProfiles` / `let checkIns` maps; there is no evidence of `stable var` usage or preupgrade/postupgrade migration handling in the provided backend snippet.",
+      "evidence": [
+        "backend/main.mo (shows `var nextCheckInId = 0; let userProfiles = Map.empty<...>(); let checkIns = Map.empty<...>();` and no stable variables in shown portion)"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Admin/secret-token based access control initialization and admin permissions pathway.",
+      "reason": "BuildRequest specifies Internet Identity authentication and no admin/caregiver dashboard unless requested; diff introduces an access control system with admin checks and a URL secret parameter `caffeineAdminToken`, which is not requested and risks violating the constraint on auth scope.",
+      "evidence": [
+        "backend/main.mo (uses `AccessControl.isAdmin(...)` and permission checks)",
+        "frontend/src/hooks/useActor.ts (reads `caffeineAdminToken` from URL and calls `actor._initializeAccessControlWithSecret(adminToken)`)",
+        "frontend/src/components/layout/AppLayout.tsx (imports `SiCaffeine` from react-icons/si)"
+      ]
+    },
+    {
+      "description": "Backend logic split across additional authorization modules rather than being fully contained in the single main Motoko actor file.",
+      "reason": "Constraint requires backend remain a single Motoko actor with all logic in the main actor file; diff shows imports of `authorization/MixinAuthorization` and `authorization/access-control`, implying additional backend source files containing logic.",
+      "evidence": [
+        "backend/main.mo (imports `authorization/MixinAuthorization` and `authorization/access-control`)"
+      ]
+    },
+    {
+      "description": "ThemeProvider from `next-themes` (Next.js oriented theming integration).",
+      "reason": "Not requested by the BuildRequest; while theming is required, introducing `next-themes` is an extra implementation choice not specified.",
+      "evidence": [
+        "frontend/src/App.tsx (imports `{ ThemeProvider }` from 'next-themes')"
+      ]
+    }
+  ],
+  "confidence": 0.68,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/auth/LoginButton.tsx",
+    "frontend/src/components/branding/BrandHeader.tsx",
+    "frontend/src/components/layout/AppLayout.tsx",
+    "frontend/src/components/risk/RiskSummaryCard.tsx",
+    "frontend/src/components/shared/DisclaimerBanner.tsx",
+    "frontend/src/components/shared/ErrorState.tsx",
+    "frontend/src/components/shared/LoadingState.tsx",
+    "frontend/src/components/shared/PrimaryButton.tsx",
+    "frontend/src/content/guidance.ts",
+    "frontend/src/hooks/useAccessibilitySettings.ts",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/lib/errors.ts",
+    "frontend/src/lib/ukDate.ts",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/AboutPage.tsx",
+    "frontend/src/pages/AccessibilitySettingsPage.tsx",
+    "frontend/src/pages/CheckInConfirmationPage.tsx",
+    "frontend/src/pages/CheckInDetailPage.tsx",
+    "frontend/src/pages/DailyCheckInPage.tsx",
+    "frontend/src/pages/HistoryDetailPage.tsx",
+    "frontend/src/pages/HistoryPage.tsx",
+    "frontend/src/pages/HowItWorksPage.tsx",
+    "frontend/src/pages/OnboardingPage.tsx",
+    "frontend/src/pages/PrivacyPage.tsx",
+    "frontend/src/pages/RiskResultsPage.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

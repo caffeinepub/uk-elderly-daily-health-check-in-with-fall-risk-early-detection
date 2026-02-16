@@ -1,0 +1,386 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "UK elderly daily health check-in with fall-risk early detection (frontend)",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Onboarding flow for 65+ users to capture and persist a minimal fall-risk context profile per authenticated Internet Identity user.",
+      "acceptanceCriteria": [
+        "Users can sign in with Internet Identity and complete onboarding.",
+        "Age < 65 is blocked with a clear English message explaining the app is for adults 65+.",
+        "Profile data is saved to the Motoko backend and is available on subsequent sessions."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the app shell with authenticated gating (Internet Identity), onboarding routing/flow, and post-onboarding navigation to daily check-in and history. Use the authorization component patterns (Internet Identity login/logout, clearing React Query cache on logout) to ensure profile data is only shown when authenticated. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/LoginButton.tsx",
+          "operation": "create",
+          "description": "Implement a login/logout button using the authorization component guidance (useInternetIdentity + React Query cache clear on logout), and expose it for use in the header. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/OnboardingPage.tsx",
+          "operation": "create",
+          "description": "Create the onboarding UI for older adults to collect profile fields (age 65+ required, optional sex/height/weight, mobility aids, falls last 12 months yes/no + count, conditions checkboxes, balance-affecting medications yes/no) with simple language and large touch targets; block age < 65 with a clear message; submit profile via backend actor and handle friendly errors. Use shadcn-ui form primitives (e.g., Card, Button, Input, Checkbox/Switch, Alert) for consistent accessible UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useUserProfile.ts",
+          "operation": "create",
+          "description": "Add React Query hooks to load/save the caller profile (getCallerUserProfile/saveCallerUserProfile) and provide derived onboarding state (needsOnboarding) that avoids UI flashing while the actor initializes (per authorization guidance). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "create",
+          "description": "Create a reusable layout with a simple header (app name + LoginButton) and footer area for disclaimers/links; ensure all primary screens can reuse consistent spacing and typography. Use shadcn-ui layout primitives (e.g., Card, Separator) for consistent styling. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Daily check-in form with one submission per UK local calendar day; prevent duplicates and allow viewing the submitted answers for the day.",
+      "acceptanceCriteria": [
+        "A signed-in user can submit a check-in and see a confirmation screen.",
+        "The app prevents a second submission for the same UK date (with an option to view the submitted answers).",
+        "Check-ins are stored and retrievable from the backend for the signed-in user."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/DailyCheckInPage.tsx",
+          "operation": "create",
+          "description": "Create the daily check-in form UI (dizziness, unsteadiness, new pain, fatigue/weakness, vision issues, medication changes today, alcohol intake, sleep quality, near-fall/fall) with large controls and plain-English labels; compute today's UK local date key; pre-check whether today's submission already exists and, if so, block re-submission and show a 'View today's answers' action. Use shadcn-ui components (Card, Button, Checkbox/Switch, Alert) for accessible form UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/CheckInConfirmationPage.tsx",
+          "operation": "create",
+          "description": "Create a confirmation screen shown after successful submission with clear next steps (view risk results, view history). Use shadcn-ui components (Card, Button, Alert) for consistent styling. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/CheckInDetailPage.tsx",
+          "operation": "create",
+          "description": "Create a read-only detail view for a specific UK date that displays saved check-in answers (used for 'view submitted answers' when the day is already submitted and for history drill-down). Use shadcn-ui components for readable, high-contrast summaries. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useDailyCheckIn.ts",
+          "operation": "create",
+          "description": "Add React Query hooks/mutations for: getCheckInByDate(todayUkDate), submitCheckIn, and getCallerCheckIns(limit) with cache keys scoped to the authenticated caller; ensure invalidation/refetch after submission. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/lib/ukDate.ts",
+          "operation": "create",
+          "description": "Implement a small utility to compute a stable UK local date string (Europe/London) for the 'one submission per calendar day' rule and consistent display formatting."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the daily check-in, confirmation, and check-in detail views into the app navigation/routing, ensuring they are only accessible to authenticated users who have completed onboarding."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Display the deterministic, rules-based fall-risk assessment (score, level, contributing factors) for the latest check-in and keep it stable across reloads.",
+      "acceptanceCriteria": [
+        "After submitting a check-in, the user sees risk score + level + contributing factors.",
+        "The backend exposes an API that returns the computed risk result for a given check-in.",
+        "Risk results for the same inputs are stable across reloads (no randomness)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/RiskResultsPage.tsx",
+          "operation": "create",
+          "description": "Create the risk results UI that shows numeric score (0–100), risk level (Low/Medium/High), and plain-English contributing factors returned by the backend; ensure the screen is readable for older adults and includes appropriate non-alarming presentation. Use shadcn-ui components (Card, Badge/Alert, Button) for consistent results styling. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useRiskAssessment.ts",
+          "operation": "create",
+          "description": "Add React Query hooks to fetch the latest computed risk assessment (getCurrentRiskAssessment) and to support history detail rendering (e.g., using getRiskHistory with the caller principal) with proper loading/error states. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/risk/RiskSummaryCard.tsx",
+          "operation": "create",
+          "description": "Create a reusable, high-contrast summary card for risk score/level/factors to reuse on results and history detail screens. Use shadcn-ui primitives for consistent visuals. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the risk results screen into navigation/routing as the post-check-in next step and allow access from history detail when risk data is available."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Provide tailored, non-alarming UK guidance by risk level with a persistent medical disclaimer (no diagnosis, no emergency response).",
+      "acceptanceCriteria": [
+        "Low/Medium/High risk screens each show guidance appropriate to the level.",
+        "UI contains a persistent disclaimer (e.g., in results and settings/about).",
+        "Copy references UK-appropriate services (GP/NHS 111) without initiating calls/messages."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/content/guidance.ts",
+          "operation": "create",
+          "description": "Add English-only, UK-focused copy blocks for Low/Medium/High guidance and a standard disclaimer (not a medical device, no diagnosis, no emergency response; references GP/NHS 111 without initiating calls/messages)."
+        },
+        {
+          "path": "frontend/src/components/shared/DisclaimerBanner.tsx",
+          "operation": "create",
+          "description": "Create a reusable disclaimer component for persistent display (e.g., in results, settings/about, and optionally footer). Use shadcn-ui Alert for readable, non-alarming prominence. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/RiskResultsPage.tsx",
+          "operation": "modify",
+          "description": "Render tailored guidance based on risk level using shared copy, and include the persistent disclaimer on the results screen. Use shadcn-ui components for consistent information hierarchy. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Add a small persistent area (e.g., footer) that can show a compact disclaimer and links to About/How it works/Privacy so users can always find limitations and policy information."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "History view to review past check-ins and risk levels over time with accessible, high-contrast summaries and drill-down per day; data loaded via React Query.",
+      "acceptanceCriteria": [
+        "User can view a list of previous check-ins with date and risk level.",
+        "Selecting an item shows the saved answers and computed risk details for that day.",
+        "Data is loaded via React Query with proper loading and error states."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/HistoryPage.tsx",
+          "operation": "create",
+          "description": "Create a history screen showing the last ~30 entries as an accessible high-contrast list (and optionally a simple chart-like visual using bars/markers) with date + risk level; selecting an item navigates to the day detail. Use shadcn-ui components (Card, Button, Tabs/Accordion if needed) for consistent accessible UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/HistoryDetailPage.tsx",
+          "operation": "create",
+          "description": "Create a history detail screen that shows the saved answers for that day plus computed risk details (reusing RiskSummaryCard) with clear headings and large typography. Use shadcn-ui components for consistent structure. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useHistory.ts",
+          "operation": "create",
+          "description": "Add React Query hook(s) that load history using backend functions that return check-ins and associated risk (prefer getRiskHistory with the authenticated caller principal), including loading skeletons and friendly error states with retry. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/shared/LoadingState.tsx",
+          "operation": "create",
+          "description": "Create a consistent loading UI for primary screens (large, readable, non-jarring). Use shadcn-ui Skeleton or equivalent primitives if available. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/shared/ErrorState.tsx",
+          "operation": "create",
+          "description": "Create a consistent error UI with plain-English messaging and a retry action that can be reused across onboarding, check-in, results, and history. Use shadcn-ui Alert + Button for consistency. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire History and History Detail pages into navigation/routing and ensure they are protected behind authentication and completed onboarding."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Older-adult-friendly UI with large type, high contrast, clear touch targets; add accessibility settings for text size and contrast mode persisted locally.",
+      "acceptanceCriteria": [
+        "Primary screens meet a “large type” layout without clipping or overlapping.",
+        "Users can change text size and contrast mode and see the change immediately.",
+        "Settings persist across reloads (local storage is acceptable)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useAccessibilitySettings.ts",
+          "operation": "create",
+          "description": "Implement a local-settings hook that persists text size (normal/large/largest) and contrast mode (on/off) to localStorage and applies settings immediately (e.g., toggling CSS classes on the document root)."
+        },
+        {
+          "path": "frontend/src/pages/AccessibilitySettingsPage.tsx",
+          "operation": "create",
+          "description": "Create an accessibility settings panel UI with text size choices and contrast toggle, designed for older adults (large controls, clear labels). Use shadcn-ui components (Switch/RadioGroup/Button, Card) to ensure consistent touch targets and accessibility. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Add global styles and CSS variables/classes to support large default typography, increased line-height, high contrast mode, and safe spacing/touch targets; ensure styles apply across onboarding, check-in, results, history, and info pages (and avoid blue/purple primary palette)."
+        },
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Add navigation access to Accessibility Settings and ensure layout spacing supports large text without clipping/overlap."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the accessibility settings page into navigation/routing and apply the accessibility settings provider/hook at the app root so changes reflect immediately across all screens."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Coherent visual theme suitable for a UK health check-in product; apply consistently across screens and avoid a blue/purple primary palette.",
+      "acceptanceCriteria": [
+        "App has a consistent theme applied across all pages.",
+        "Theme avoids blue & purple as the primary palette.",
+        "Components are visually consistent (buttons, cards, headings, alerts)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Define theme tokens (CSS variables) for background/foreground, primary/secondary/accent, borders, and focus states using a non-blue/non-purple primary palette (e.g., green/teal with warm neutral accents), and ensure high-contrast readability."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Adjust Tailwind theme extension (if needed) to align with the new CSS variable-based theme and ensure typography/spacing defaults support older-adult readability (e.g., comfortable base font sizing)."
+        },
+        {
+          "path": "frontend/src/components/shared/PrimaryButton.tsx",
+          "operation": "create",
+          "description": "Create a single reusable primary action button wrapper (large touch target, consistent sizing) to be used across onboarding/check-in/results/history to keep UI consistent. Use shadcn-ui Button as the base component. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/OnboardingPage.tsx",
+          "operation": "modify",
+          "description": "Adopt shared themed components (cards, buttons, alerts) and ensure headings/spacing match the global theme consistently. Use shadcn-ui components consistently. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/DailyCheckInPage.tsx",
+          "operation": "modify",
+          "description": "Adopt shared themed components and ensure consistent visual hierarchy and touch target sizing per the app theme. Use shadcn-ui components consistently. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/RiskResultsPage.tsx",
+          "operation": "modify",
+          "description": "Apply consistent themed risk-level styling (non-alarming color usage, high contrast) via shared components and theme tokens. Use shadcn-ui components consistently. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/HistoryPage.tsx",
+          "operation": "modify",
+          "description": "Apply consistent themed list/summary styling and ensure readability for older adults using shared components and theme tokens. Use shadcn-ui components consistently. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Client-side validation and friendly error handling for forms and backend/network failures with actionable messages and retry options.",
+      "acceptanceCriteria": [
+        "Invalid or incomplete forms cannot be submitted and show inline messages.",
+        "Backend rejects duplicate same-day submissions and frontend shows an actionable message.",
+        "Network/backend failures show a retry option and do not blank the UI."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/lib/errors.ts",
+          "operation": "create",
+          "description": "Add utilities to normalize backend/network errors into plain-English messages (e.g., authorization required, duplicate same-day check-in, validation issues) without exposing raw exceptions."
+        },
+        {
+          "path": "frontend/src/pages/OnboardingPage.tsx",
+          "operation": "modify",
+          "description": "Add client-side validation (age required and >= 65; fall count required when falls=yes; numeric bounds for optional height/weight when present) and show inline friendly messages; handle backend errors using the shared error utilities and ErrorState component. Use shadcn-ui form feedback patterns (Alert, field messages) for consistent UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/DailyCheckInPage.tsx",
+          "operation": "modify",
+          "description": "Add required-field validation for daily check-in (ensure all required toggles/questions are answered before submit), and handle duplicate-submission rejections and transient failures with plain-English messaging and a retry option; avoid blank screens by using LoadingState/ErrorState components. Use shadcn-ui components for consistent feedback UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/HistoryPage.tsx",
+          "operation": "modify",
+          "description": "Ensure React Query errors render via ErrorState with retry and do not blank the UI; include clear messaging for unauthenticated/unauthorized access (prompt to sign in). Use shadcn-ui Alert/Button for consistency. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add a consistent unauthenticated state (sign-in prompt) and ensure logout clears cached queries (per authorization guidance) so personal data is not shown after logout. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Add static informational pages (About, How it works, Privacy) in English, UK-focused, and accessible from navigation.",
+      "acceptanceCriteria": [
+        "Pages are accessible from navigation.",
+        "Copy explains data handling and limitations clearly in English.",
+        "No references to unsupported integrations (SMS, push notifications, external analytics)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AboutPage.tsx",
+          "operation": "create",
+          "description": "Create an About page with UK-focused explanation of the app purpose, limitations, and disclaimer in English (no emergency response, no diagnosis). Use shadcn-ui typography/card components for readable layout. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/HowItWorksPage.tsx",
+          "operation": "create",
+          "description": "Create a 'How it works (rules-based risk)' page explaining the transparent, rules-based nature of the risk assessment in plain English, without claiming certainty. Use shadcn-ui components for readable structure. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/PrivacyPage.tsx",
+          "operation": "create",
+          "description": "Create a Privacy page explaining what data is stored in the canister, that no third-party services are used, and that the app is UK-focused; keep copy in English and avoid unsupported integrations. Use shadcn-ui components for readable structure. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Add navigation links to About/How it works/Privacy (and ensure they remain accessible and readable with large text and high contrast)."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire About/How it works/Privacy pages into routing and ensure they are reachable from navigation; keep them accessible without implying any external integrations."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Add generated branding/usability images as static assets and render them in the UI without backend involvement.",
+      "acceptanceCriteria": [
+        "Generated images exist in frontend/public/assets/generated and are referenced in the React UI.",
+        "Images load correctly in production build without backend involvement."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/uk-fallcheck-logo.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated logo image asset as a static file in the required generated assets directory so it can be referenced by the React UI."
+        },
+        {
+          "path": "frontend/public/assets/generated/checkin-hero.dim_1600x900.png",
+          "operation": "create",
+          "description": "Add the generated hero illustration asset as a static file in the required generated assets directory so it can be referenced by the React UI."
+        },
+        {
+          "path": "frontend/public/assets/generated/risk-icons-set.dim_1024x1024.png",
+          "operation": "create",
+          "description": "Add the generated monochrome icon set asset as a static file in the required generated assets directory so it can be referenced by the React UI."
+        },
+        {
+          "path": "frontend/src/components/branding/BrandHeader.tsx",
+          "operation": "create",
+          "description": "Create a small branding header component that renders the generated logo (frontend/public/assets/generated/uk-fallcheck-logo.dim_512x512.png) and app name with high-contrast, large-type styling. Use shadcn-ui layout primitives if helpful. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/OnboardingPage.tsx",
+          "operation": "modify",
+          "description": "Render the generated hero illustration (frontend/public/assets/generated/checkin-hero.dim_1600x900.png) on the onboarding/intro area to improve usability and reassurance; ensure it remains accessible (alt text in English) and does not add extra steps."
+        },
+        {
+          "path": "frontend/src/pages/DailyCheckInPage.tsx",
+          "operation": "modify",
+          "description": "Render relevant parts of the generated icon set (frontend/public/assets/generated/risk-icons-set.dim_1024x1024.png) near corresponding questions (e.g., dizzy/unsteady/sleep) to aid comprehension; ensure icons are decorative or have appropriate English alt text."
+        },
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Use the BrandHeader in the app header so branding is consistently visible across core screens."
+        }
+      ]
+    }
+  ]
+}
