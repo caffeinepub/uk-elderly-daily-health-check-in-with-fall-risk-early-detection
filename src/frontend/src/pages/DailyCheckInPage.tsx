@@ -4,13 +4,13 @@ import { useSubmitCheckIn, useGetCheckInByDate } from '../hooks/useQueries';
 import { getUKLocalDate, formatUKDate } from '../lib/ukDate';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import PrimaryButton from '../components/shared/PrimaryButton';
 import LoadingState from '../components/shared/LoadingState';
 import { normalizeError } from '../lib/errors';
 import type { DailyCheckIn } from '../backend';
+import { cn } from '@/lib/utils';
 
 export default function DailyCheckInPage() {
   const navigate = useNavigate();
@@ -126,83 +126,83 @@ export default function DailyCheckInPage() {
             )}
 
             <div className="space-y-6">
-              <QuestionSwitch
+              <QuestionButtons
                 id="dizziness"
                 label="Have you felt dizzy or lightheaded?"
-                checked={formData.dizziness}
-                onChange={(checked) => setFormData({ ...formData, dizziness: checked })}
+                value={formData.dizziness}
+                onChange={(value) => setFormData({ ...formData, dizziness: value })}
                 disabled={alreadySubmitted}
               />
 
-              <QuestionSwitch
+              <QuestionButtons
                 id="unsteadiness"
                 label="Have you felt unsteady on your feet?"
-                checked={formData.unsteadiness}
-                onChange={(checked) => setFormData({ ...formData, unsteadiness: checked })}
+                value={formData.unsteadiness}
+                onChange={(value) => setFormData({ ...formData, unsteadiness: value })}
                 disabled={alreadySubmitted}
               />
 
-              <QuestionSwitch
+              <QuestionButtons
                 id="newPain"
                 label="Do you have any new pain or discomfort?"
-                checked={formData.newPain}
-                onChange={(checked) => setFormData({ ...formData, newPain: checked })}
+                value={formData.newPain}
+                onChange={(value) => setFormData({ ...formData, newPain: value })}
                 disabled={alreadySubmitted}
               />
 
-              <QuestionSwitch
+              <QuestionButtons
                 id="fatigue"
                 label="Have you felt unusually tired or weak?"
-                checked={formData.fatigue}
-                onChange={(checked) => setFormData({ ...formData, fatigue: checked })}
+                value={formData.fatigue}
+                onChange={(value) => setFormData({ ...formData, fatigue: value })}
                 disabled={alreadySubmitted}
               />
 
-              <QuestionSwitch
+              <QuestionButtons
                 id="visionIssues"
                 label="Have you had any vision problems?"
-                checked={formData.visionIssues}
-                onChange={(checked) => setFormData({ ...formData, visionIssues: checked })}
+                value={formData.visionIssues}
+                onChange={(value) => setFormData({ ...formData, visionIssues: value })}
                 disabled={alreadySubmitted}
               />
 
-              <QuestionSwitch
+              <QuestionButtons
                 id="medicationChanges"
                 label="Have you changed any medications today?"
-                checked={formData.medicationChanges}
-                onChange={(checked) => setFormData({ ...formData, medicationChanges: checked })}
+                value={formData.medicationChanges}
+                onChange={(value) => setFormData({ ...formData, medicationChanges: value })}
                 disabled={alreadySubmitted}
               />
 
-              <QuestionSwitch
+              <QuestionButtons
                 id="alcoholIntake"
                 label="Have you consumed alcohol today?"
-                checked={formData.alcoholIntake}
-                onChange={(checked) => setFormData({ ...formData, alcoholIntake: checked })}
+                value={formData.alcoholIntake}
+                onChange={(value) => setFormData({ ...formData, alcoholIntake: value })}
                 disabled={alreadySubmitted}
               />
 
-              <QuestionSwitch
+              <QuestionButtons
                 id="sleepQualityGood"
                 label="Did you sleep well last night?"
-                checked={formData.sleepQualityGood}
-                onChange={(checked) => setFormData({ ...formData, sleepQualityGood: checked })}
+                value={formData.sleepQualityGood}
+                onChange={(value) => setFormData({ ...formData, sleepQualityGood: value })}
                 disabled={alreadySubmitted}
               />
 
-              <QuestionSwitch
+              <QuestionButtons
                 id="nearFall"
                 label="Have you had a near-fall (almost fell but caught yourself)?"
-                checked={formData.nearFall}
-                onChange={(checked) => setFormData({ ...formData, nearFall: checked })}
+                value={formData.nearFall}
+                onChange={(value) => setFormData({ ...formData, nearFall: value })}
                 disabled={alreadySubmitted}
               />
 
-              <QuestionSwitch
+              <QuestionButtons
                 id="actualFall"
                 label="Have you had an actual fall?"
-                checked={formData.actualFall}
-                onChange={(checked) => setFormData({ ...formData, actualFall: checked })}
+                value={formData.actualFall}
+                onChange={(value) => setFormData({ ...formData, actualFall: value })}
                 disabled={alreadySubmitted}
               />
             </div>
@@ -223,27 +223,54 @@ export default function DailyCheckInPage() {
   );
 }
 
-interface QuestionSwitchProps {
+interface QuestionButtonsProps {
   id: string;
   label: string;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
+  value: boolean;
+  onChange: (value: boolean) => void;
   disabled?: boolean;
 }
 
-function QuestionSwitch({ id, label, checked, onChange, disabled }: QuestionSwitchProps) {
+function QuestionButtons({ id, label, value, onChange, disabled }: QuestionButtonsProps) {
   return (
-    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-      <Label htmlFor={id} className="text-lg cursor-pointer flex-1">
+    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <Label htmlFor={id} className="text-lg block mb-3">
         {label}
       </Label>
-      <Switch
-        id={id}
-        checked={checked}
-        onCheckedChange={onChange}
-        disabled={disabled}
-        className="data-[state=checked]:bg-emerald-600"
-      />
+      <div className="flex gap-3" role="group" aria-labelledby={id}>
+        <button
+          type="button"
+          onClick={() => onChange(true)}
+          disabled={disabled}
+          aria-pressed={value === true}
+          className={cn(
+            'flex-1 min-h-[56px] px-6 py-3 rounded-lg font-semibold text-lg transition-all',
+            'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2',
+            'disabled:opacity-50 disabled:cursor-not-allowed',
+            value === true
+              ? 'bg-emerald-600 text-white shadow-md hover:bg-emerald-700'
+              : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-2 border-gray-300 dark:border-gray-600 hover:border-emerald-500 dark:hover:border-emerald-500'
+          )}
+        >
+          Yes
+        </button>
+        <button
+          type="button"
+          onClick={() => onChange(false)}
+          disabled={disabled}
+          aria-pressed={value === false}
+          className={cn(
+            'flex-1 min-h-[56px] px-6 py-3 rounded-lg font-semibold text-lg transition-all',
+            'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2',
+            'disabled:opacity-50 disabled:cursor-not-allowed',
+            value === false
+              ? 'bg-emerald-600 text-white shadow-md hover:bg-emerald-700'
+              : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-2 border-gray-300 dark:border-gray-600 hover:border-emerald-500 dark:hover:border-emerald-500'
+          )}
+        >
+          No
+        </button>
+      </div>
     </div>
   );
 }

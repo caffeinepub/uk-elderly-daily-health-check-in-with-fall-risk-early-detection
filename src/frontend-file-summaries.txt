@@ -14,7 +14,7 @@
   "frontend/src/components/shared/PrimaryButton.tsx": "Reusable large touch-target button wrapper ensuring consistent sizing (56px min-height) for elderly users, using ComponentProps to infer button props type.",
   "frontend/src/components/risk/RiskSummaryCard.tsx": "Risk assessment display card showing score, level badge, and contributing factors with appropriate color coding and icons.",
   "frontend/src/pages/OnboardingPage.tsx": "User profile setup form for 65+ users with age validation, fall history, mobility aids, health conditions, and balance-affecting medications with hero image.",
-  "frontend/src/pages/DailyCheckInPage.tsx": "Daily health check-in form with 10 yes/no questions, UK date validation, duplicate submission prevention, and view-only mode for completed check-ins.",
+  "frontend/src/pages/DailyCheckInPage.tsx": "Daily health check-in form with 10 yes/no questions using clickable button controls (Yes/No buttons), UK date validation, duplicate submission prevention, and view-only mode for completed check-ins.",
   "frontend/src/pages/CheckInConfirmationPage.tsx": "Success confirmation screen after check-in submission with navigation to risk results and history.",
   "frontend/src/pages/CheckInDetailPage.tsx": "Read-only view of a specific check-in showing all answers with checkmarks/x-marks for a given date.",
   "frontend/src/pages/RiskResultsPage.tsx": "Risk assessment results page displaying RiskSummaryCard, tailored guidance based on risk level, and persistent disclaimer.",

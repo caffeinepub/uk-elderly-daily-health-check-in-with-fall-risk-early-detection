@@ -1,227 +1,42 @@
 {
   "kind": "build_request",
-  "title": "UK elderly daily health check-in with fall-risk early detection",
+  "title": "Replace slider with yes/no buttons for check-in questions",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Implement an onboarding flow for older adults (65+) that captures a minimal user profile for fall-risk context: age (must be 65+), sex (optional), height/weight (optional), mobility aids used (e.g., cane/walker), history of falls in last 12 months (yes/no + count), key conditions (e.g., dizziness, arthritis, Parkinson’s—checkboxes), and medications that may affect balance (simple yes/no). Store this profile per authenticated Internet Identity user.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Create an app that is a daily check in for the elderly 65years and above, to check their health status and check if they are likely to have a fall."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Users can sign in with Internet Identity and complete onboarding.",
-        "Age < 65 is blocked with a clear English message explaining the app is for adults 65+.",
-        "Profile data is saved to the Motoko backend and is available on subsequent sessions."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Create a daily check-in form (one submission per calendar day per user, using UK local date) that collects health and fall-related signals such as: dizziness/lightheadedness, unsteadiness, new pain, fatigue/weakness, vision issues, medication changes today, alcohol intake, sleep quality, and whether the user had a near-fall or fall since last check-in. Persist each check-in entry to the backend with timestamp and UK date key.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "daily check in ... check their health status and check if they are likely to have a fall"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A signed-in user can submit a check-in and see a confirmation screen.",
-        "The app prevents a second submission for the same UK date (with an option to view the submitted answers).",
-        "Check-ins are stored and retrievable from the backend for the signed-in user."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Implement a fall-risk assessment computed from the latest check-in (and optionally recent history like last 7 days) that outputs: a numeric risk score (0–100), a risk level (Low/Medium/High), and a short set of plain-English contributing factors (e.g., “Reported dizziness today”, “Near-fall reported”). The scoring must be deterministic, transparent (rules-based), and configurable in backend constants.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "early detection tool for falls in the elderly"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After submitting a check-in, the user sees risk score + level + contributing factors.",
-        "The backend exposes an API that returns the computed risk result for a given check-in.",
-        "Risk results for the same inputs are stable across reloads (no randomness)."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Show tailored, non-alarming guidance based on the risk level, written for UK users in English (e.g., “Consider contacting your GP or NHS 111 for advice” for higher risk) and include a clear disclaimer that the app is not a medical device and does not provide a diagnosis or emergency response. Avoid claiming to predict falls with certainty.",
+      "text": "Replace the existing slider control in the daily check-in form with two clickable buttons labeled 'Yes' and 'No' for each question",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-19"
         ],
         "quotes": [
-          "The app should be an early detection tool for falls in the elderly in UK."
+          "The checkin questions should have clickable buttons for yes and for no rather than the slide"
         ]
       },
       "acceptanceCriteria": [
-        "Low/Medium/High risk screens each show guidance appropriate to the level.",
-        "UI contains a persistent disclaimer (e.g., in results and settings/about).",
-        "Copy references UK-appropriate services (GP/NHS 111) without initiating calls/messages."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Add a history view that lets users review past check-ins and risk levels over time (e.g., last 30 entries) with accessible, high-contrast charts or list summaries and the ability to open a specific day’s details.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "daily check in ... check their health status"
-        ]
-      },
-      "acceptanceCriteria": [
-        "User can view a list of previous check-ins with date and risk level.",
-        "Selecting an item shows the saved answers and computed risk details for that day.",
-        "Data is loaded via React Query with proper loading and error states."
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Design the UI specifically for older adults: large default typography, high contrast, clear touch targets, simple language, and minimal steps. Include an accessibility settings panel with at least: text size (normal/large/largest) and contrast mode toggle, persisted locally in the browser.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "daily check in for the elderly 65years and above"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Primary screens meet a “large type” layout without clipping or overlapping.",
-        "Users can change text size and contrast mode and see the change immediately.",
-        "Settings persist across reloads (local storage is acceptable)."
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Create a coherent visual theme for the app (colors, typography, spacing, components) suitable for a UK health check-in product and apply it consistently across onboarding, check-in, results, and history. Do not use a blue & purple palette.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "App has a consistent theme applied across all pages.",
-        "Theme avoids blue & purple as the primary palette.",
-        "Components are visually consistent (buttons, cards, headings, alerts)."
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Backend data model and API: implement Motoko types and stable storage for user profile and check-ins, with query/update methods to (1) get/set profile, (2) create daily check-in, (3) list check-ins, (4) get computed risk for a check-in. Ensure data is isolated per authenticated principal.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A user can only read/write their own profile and check-ins (principal-based separation).",
-        "Backend methods cover the full frontend flow without requiring any external database.",
-        "Canister upgrade safety is considered using stable variables (and migration only if needed later)."
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Add basic input validation and friendly error handling: required fields in daily check-in must be validated client-side; backend must validate day uniqueness and reject invalid submissions; UI must present errors in plain English without exposing raw exceptions.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Invalid or incomplete forms cannot be submitted and show inline messages.",
-        "Backend rejects duplicate same-day submissions and frontend shows an actionable message.",
-        "Network/backend failures show a retry option and do not blank the UI."
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Add static informational pages: “About”, “How it works (rules-based risk)”, and “Privacy” explaining what data is stored in the canister, that no third-party services are used, and that the app is UK-focused. All text must be in English.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "The app should be an early detection tool for falls in the elderly in UK."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Pages are accessible from navigation.",
-        "Copy explains data handling and limitations clearly in English.",
-        "No references to unsupported integrations (SMS, push notifications, external analytics)."
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Add generated static images to support branding and usability, and render them in the UI (e.g., on the landing/onboarding screens). Store them as static assets under frontend/public/assets/generated and do not serve images through the backend.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Generated images exist in frontend/public/assets/generated and are referenced in the React UI.",
-        "Images load correctly in production build without backend involvement."
+        "Each check-in question displays two distinct clickable buttons: one for 'Yes' and one for 'No'",
+        "The selected button is visually highlighted to indicate the user's choice",
+        "The buttons maintain the same functionality as the current slider (storing true/false values)",
+        "The button controls are keyboard accessible and meet accessibility standards",
+        "All existing check-in questions use the new button interface consistently"
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor (all logic in the main actor file).",
-    "Do not edit files under frontend immutablePaths (compose UI components instead).",
-    "No external databases or third-party auth; authentication must use Internet Identity.",
-    "Use English for all user-facing text.",
-    "UK-focused wording (e.g., GP/NHS 111) without implying emergency dispatch capabilities."
+    "Maintain the existing data structure for check-in answers (boolean values)",
+    "Preserve all existing form validation and submission logic",
+    "Do not modify the backend API or data models"
   ],
   "nonGoals": [
-    "Not an emergency response system (no automatic calling, SMS, push notifications, or real-time monitoring).",
-    "Not a medical diagnosis or certified medical device; do not claim guaranteed fall prediction.",
-    "No caregiver/admin dashboard unless explicitly requested later.",
-    "No third-party analytics, social integrations, or external data sources."
+    "Changing the check-in questions themselves",
+    "Modifying the onboarding flow",
+    "Altering the risk assessment calculation",
+    "Adding new check-in fields"
   ],
   "imageRequirements": {
-    "required": [
-      "Warm, reassuring app logo mark with simple symbol (steady-walk motif), flat design (uk-fallcheck-logo.dim_512x512.png)",
-      "Minimal hero illustration of an older adult doing a daily check-in on a tablet, clean flat style, high contrast (checkin-hero.dim_1600x900.png)",
-      "Set of 3 simple monochrome icons (dizzy, unsteady, sleep) in consistent stroke style (risk-icons-set.dim_1024x1024.png)"
-    ],
+    "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [
-      "Build a UK-focused daily check-in app for adults 65+ to track health status and provide early detection of fall risk."
-    ],
-    "goalsToRemove": [],
-    "preferencesToAdd": [
-      "Use English for all user-facing text."
-    ],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }
