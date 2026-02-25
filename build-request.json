@@ -1,0 +1,42 @@
+{
+  "kind": "build_request",
+  "title": "Replace slider with yes/no buttons for check-in questions",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Replace the existing slider control in the daily check-in form with two clickable buttons labeled 'Yes' and 'No' for each question",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-19"
+        ],
+        "quotes": [
+          "The checkin questions should have clickable buttons for yes and for no rather than the slide"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Each check-in question displays two distinct clickable buttons: one for 'Yes' and one for 'No'",
+        "The selected button is visually highlighted to indicate the user's choice",
+        "The buttons maintain the same functionality as the current slider (storing true/false values)",
+        "The button controls are keyboard accessible and meet accessibility standards",
+        "All existing check-in questions use the new button interface consistently"
+      ]
+    }
+  ],
+  "constraints": [
+    "Maintain the existing data structure for check-in answers (boolean values)",
+    "Preserve all existing form validation and submission logic",
+    "Do not modify the backend API or data models"
+  ],
+  "nonGoals": [
+    "Changing the check-in questions themselves",
+    "Modifying the onboarding flow",
+    "Altering the risk assessment calculation",
+    "Adding new check-in fields"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

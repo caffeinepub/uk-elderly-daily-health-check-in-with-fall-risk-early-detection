@@ -1,0 +1,25 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Replace slider with yes/no buttons for check-in questions",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Replace the existing slider control in the daily check-in form with two clickable buttons labeled 'Yes' and 'No' for each question",
+      "acceptanceCriteria": [
+        "Each check-in question displays two distinct clickable buttons: one for 'Yes' and one for 'No'",
+        "The selected button is visually highlighted to indicate the user's choice",
+        "The buttons maintain the same functionality as the current slider (storing true/false values)",
+        "The button controls are keyboard accessible and meet accessibility standards",
+        "All existing check-in questions use the new button interface consistently"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/DailyCheckInPage.tsx",
+          "operation": "modify",
+          "description": "Replace the slider controls for all check-in questions with two button components. For each boolean question field (nearFall, actualFall, dizziness, unsteadiness, visionIssues, newPain, fatigue, medicationChanges, sleepQualityGood, alcoholIntake), render two buttons labeled 'Yes' and 'No'. Apply visual styling to highlight the selected button based on the current form state. Ensure buttons are keyboard-accessible with proper focus states and ARIA attributes. Maintain the existing form state management and validation logic without changes to the data structure or submission flow."
+        }
+      ]
+    }
+  ]
+}
