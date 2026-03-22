@@ -1,23 +1,33 @@
-import { useParams, useNavigate } from '@tanstack/react-router';
-import { useGetCheckInByDate } from '../hooks/useQueries';
-import { formatUKDate } from '../lib/ukDate';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
-import PrimaryButton from '../components/shared/PrimaryButton';
-import LoadingState from '../components/shared/LoadingState';
-import ErrorState from '../components/shared/ErrorState';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate, useParams } from "@tanstack/react-router";
+import { ArrowLeft, CheckCircle, XCircle } from "lucide-react";
+import ErrorState from "../components/shared/ErrorState";
+import LoadingState from "../components/shared/LoadingState";
+import PrimaryButton from "../components/shared/PrimaryButton";
+import { useGetCheckInByDate } from "../hooks/useQueries";
+import { formatUKDate } from "../lib/ukDate";
 
 export default function CheckInDetailPage() {
   const { date } = useParams({ strict: false });
   const navigate = useNavigate();
-  const { data: checkIn, isLoading, error, refetch } = useGetCheckInByDate(date || '');
+  const {
+    data: checkIn,
+    isLoading,
+    error,
+    refetch,
+  } = useGetCheckInByDate(date || "");
 
   if (isLoading) {
     return <LoadingState message="Loading check-in details..." />;
   }
 
   if (error) {
-    return <ErrorState message="Failed to load check-in details" onRetry={() => refetch()} />;
+    return (
+      <ErrorState
+        message="Failed to load check-in details"
+        onRetry={() => refetch()}
+      />
+    );
   }
 
   if (!checkIn) {
@@ -25,23 +35,23 @@ export default function CheckInDetailPage() {
   }
 
   const questions = [
-    { label: 'Felt dizzy or lightheaded', value: checkIn.dizziness },
-    { label: 'Felt unsteady on feet', value: checkIn.unsteadiness },
-    { label: 'New pain or discomfort', value: checkIn.newPain },
-    { label: 'Unusually tired or weak', value: checkIn.fatigue },
-    { label: 'Vision problems', value: checkIn.visionIssues },
-    { label: 'Changed medications', value: checkIn.medicationChanges },
-    { label: 'Consumed alcohol', value: checkIn.alcoholIntake },
-    { label: 'Slept well', value: checkIn.sleepQualityGood },
-    { label: 'Had a near-fall', value: checkIn.nearFall },
-    { label: 'Had an actual fall', value: checkIn.actualFall },
+    { label: "Felt dizzy or lightheaded", value: checkIn.dizziness },
+    { label: "Felt unsteady on feet", value: checkIn.unsteadiness },
+    { label: "New pain or discomfort", value: checkIn.newPain },
+    { label: "Unusually tired or weak", value: checkIn.fatigue },
+    { label: "Vision problems", value: checkIn.visionIssues },
+    { label: "Changed medications", value: checkIn.medicationChanges },
+    { label: "Consumed alcohol", value: checkIn.alcoholIntake },
+    { label: "Slept well", value: checkIn.sleepQualityGood },
+    { label: "Had a near-fall", value: checkIn.nearFall },
+    { label: "Had an actual fall", value: checkIn.actualFall },
   ];
 
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-6">
         <PrimaryButton
-          onClick={() => navigate({ to: '/history' })}
+          onClick={() => navigate({ to: "/history" })}
           variant="ghost"
           className="mb-4"
         >
@@ -63,9 +73,9 @@ export default function CheckInDetailPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {questions.map((question, index) => (
+            {questions.map((question) => (
               <div
-                key={index}
+                key={question.label}
                 className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
               >
                 <span className="text-lg">{question.label}</span>

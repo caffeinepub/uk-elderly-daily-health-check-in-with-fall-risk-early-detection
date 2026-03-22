@@ -1,22 +1,29 @@
-import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
-import { useInternetIdentity } from './hooks/useInternetIdentity';
-import { useGetCallerUserProfile } from './hooks/useQueries';
-import AppLayout from './components/layout/AppLayout';
-import OnboardingPage from './pages/OnboardingPage';
-import DailyCheckInPage from './pages/DailyCheckInPage';
-import CheckInConfirmationPage from './pages/CheckInConfirmationPage';
-import CheckInDetailPage from './pages/CheckInDetailPage';
-import RiskResultsPage from './pages/RiskResultsPage';
-import HistoryPage from './pages/HistoryPage';
-import HistoryDetailPage from './pages/HistoryDetailPage';
-import AccessibilitySettingsPage from './pages/AccessibilitySettingsPage';
-import AboutPage from './pages/AboutPage';
-import HowItWorksPage from './pages/HowItWorksPage';
-import PrivacyPage from './pages/PrivacyPage';
-import LoadingState from './components/shared/LoadingState';
-import { AccessibilityProvider } from './hooks/useAccessibilitySettings';
-import { Toaster } from '@/components/ui/sonner';
-import { ThemeProvider } from 'next-themes';
+import { Toaster } from "@/components/ui/sonner";
+import {
+  Outlet,
+  RouterProvider,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from "@tanstack/react-router";
+import { ThemeProvider } from "next-themes";
+import AppLayout from "./components/layout/AppLayout";
+import LoadingState from "./components/shared/LoadingState";
+import { AccessibilityProvider } from "./hooks/useAccessibilitySettings";
+import { useInternetIdentity } from "./hooks/useInternetIdentity";
+import { useGetCallerUserProfile } from "./hooks/useQueries";
+import AboutPage from "./pages/AboutPage";
+import AccessibilitySettingsPage from "./pages/AccessibilitySettingsPage";
+import AppDocumentPage from "./pages/AppDocumentPage";
+import CheckInConfirmationPage from "./pages/CheckInConfirmationPage";
+import CheckInDetailPage from "./pages/CheckInDetailPage";
+import DailyCheckInPage from "./pages/DailyCheckInPage";
+import HistoryDetailPage from "./pages/HistoryDetailPage";
+import HistoryPage from "./pages/HistoryPage";
+import HowItWorksPage from "./pages/HowItWorksPage";
+import OnboardingPage from "./pages/OnboardingPage";
+import PrivacyPage from "./pages/PrivacyPage";
+import RiskResultsPage from "./pages/RiskResultsPage";
 
 function RootLayout() {
   return (
@@ -28,10 +35,14 @@ function RootLayout() {
 
 function AuthGate({ children }: { children: React.ReactNode }) {
   const { identity, loginStatus } = useInternetIdentity();
-  const { data: userProfile, isLoading: profileLoading, isFetched } = useGetCallerUserProfile();
+  const {
+    data: userProfile,
+    isLoading: profileLoading,
+    isFetched,
+  } = useGetCallerUserProfile();
 
   const isAuthenticated = !!identity;
-  const isInitializing = loginStatus === 'initializing';
+  const isInitializing = loginStatus === "initializing";
 
   if (isInitializing || (isAuthenticated && profileLoading)) {
     return <LoadingState message="Loading your profile..." />;
@@ -41,12 +52,14 @@ function AuthGate({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 p-4">
         <div className="max-w-2xl w-full text-center space-y-6">
-          <img 
-            src="/assets/generated/uk-fallcheck-logo.dim_512x512.png" 
-            alt="UK FallCheck Logo" 
+          <img
+            src="/assets/generated/uk-fallcheck-logo.dim_512x512.png"
+            alt="UK FallCheck Logo"
             className="w-32 h-32 mx-auto"
           />
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Welcome to FallCheck</h1>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            Welcome to FallCheck
+          </h1>
           <p className="text-xl text-gray-700 dark:text-gray-300">
             Your daily health companion for fall prevention
           </p>
@@ -58,7 +71,8 @@ function AuthGate({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const showProfileSetup = isAuthenticated && !profileLoading && isFetched && userProfile === null;
+  const showProfileSetup =
+    isAuthenticated && !profileLoading && isFetched && userProfile === null;
 
   if (showProfileSetup) {
     return <OnboardingPage />;
@@ -73,7 +87,7 @@ const rootRoute = createRootRoute({
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/',
+  path: "/",
   component: () => (
     <AuthGate>
       <DailyCheckInPage />
@@ -83,7 +97,7 @@ const indexRoute = createRoute({
 
 const checkInRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/check-in',
+  path: "/check-in",
   component: () => (
     <AuthGate>
       <DailyCheckInPage />
@@ -93,7 +107,7 @@ const checkInRoute = createRoute({
 
 const confirmationRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/confirmation',
+  path: "/confirmation",
   component: () => (
     <AuthGate>
       <CheckInConfirmationPage />
@@ -103,7 +117,7 @@ const confirmationRoute = createRoute({
 
 const checkInDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/check-in/$date',
+  path: "/check-in/$date",
   component: () => (
     <AuthGate>
       <CheckInDetailPage />
@@ -113,7 +127,7 @@ const checkInDetailRoute = createRoute({
 
 const riskResultsRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/risk-results',
+  path: "/risk-results",
   component: () => (
     <AuthGate>
       <RiskResultsPage />
@@ -123,7 +137,7 @@ const riskResultsRoute = createRoute({
 
 const historyRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/history',
+  path: "/history",
   component: () => (
     <AuthGate>
       <HistoryPage />
@@ -133,7 +147,7 @@ const historyRoute = createRoute({
 
 const historyDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/history/$date',
+  path: "/history/$date",
   component: () => (
     <AuthGate>
       <HistoryDetailPage />
@@ -143,7 +157,7 @@ const historyDetailRoute = createRoute({
 
 const accessibilityRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/accessibility',
+  path: "/accessibility",
   component: () => (
     <AuthGate>
       <AccessibilitySettingsPage />
@@ -153,20 +167,26 @@ const accessibilityRoute = createRoute({
 
 const aboutRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/about',
+  path: "/about",
   component: AboutPage,
 });
 
 const howItWorksRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/how-it-works',
+  path: "/how-it-works",
   component: HowItWorksPage,
 });
 
 const privacyRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/privacy',
+  path: "/privacy",
   component: PrivacyPage,
+});
+
+const documentRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/document",
+  component: AppDocumentPage,
 });
 
 const routeTree = rootRoute.addChildren([
@@ -181,11 +201,12 @@ const routeTree = rootRoute.addChildren([
   aboutRoute,
   howItWorksRoute,
   privacyRoute,
+  documentRoute,
 ]);
 
 const router = createRouter({ routeTree });
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }

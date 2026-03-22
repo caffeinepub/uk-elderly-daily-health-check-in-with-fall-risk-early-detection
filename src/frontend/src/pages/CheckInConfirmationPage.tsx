@@ -1,7 +1,7 @@
-import { useNavigate } from '@tanstack/react-router';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle } from 'lucide-react';
-import PrimaryButton from '../components/shared/PrimaryButton';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate } from "@tanstack/react-router";
+import { CheckCircle } from "lucide-react";
+import PrimaryButton from "../components/shared/PrimaryButton";
 
 export default function CheckInConfirmationPage() {
   const navigate = useNavigate();
@@ -22,14 +22,14 @@ export default function CheckInConfirmationPage() {
 
           <div className="space-y-3">
             <PrimaryButton
-              onClick={() => navigate({ to: '/risk-results' })}
+              onClick={() => navigate({ to: "/risk-results" })}
               className="w-full"
             >
               View Your Risk Assessment
             </PrimaryButton>
 
             <PrimaryButton
-              onClick={() => navigate({ to: '/history' })}
+              onClick={() => navigate({ to: "/history" })}
               variant="outline"
               className="w-full"
             >
@@ -37,7 +37,7 @@ export default function CheckInConfirmationPage() {
             </PrimaryButton>
 
             <PrimaryButton
-              onClick={() => navigate({ to: '/' })}
+              onClick={() => navigate({ to: "/" })}
               variant="ghost"
               className="w-full"
             >

@@ -1,21 +1,28 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from '@tanstack/react-router';
-import { useSubmitCheckIn, useGetCheckInByDate } from '../hooks/useQueries';
-import { getUKLocalDate, formatUKDate } from '../lib/ukDate';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, CheckCircle } from 'lucide-react';
-import PrimaryButton from '../components/shared/PrimaryButton';
-import LoadingState from '../components/shared/LoadingState';
-import { normalizeError } from '../lib/errors';
-import type { DailyCheckIn } from '../backend';
-import { cn } from '@/lib/utils';
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { useNavigate } from "@tanstack/react-router";
+import { AlertCircle, CheckCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { DailyCheckIn } from "../backend";
+import LoadingState from "../components/shared/LoadingState";
+import PrimaryButton from "../components/shared/PrimaryButton";
+import { useGetCheckInByDate, useSubmitCheckIn } from "../hooks/useQueries";
+import { normalizeError } from "../lib/errors";
+import { formatUKDate, getUKLocalDate } from "../lib/ukDate";
 
 export default function DailyCheckInPage() {
   const navigate = useNavigate();
   const todayDate = getUKLocalDate();
-  const { data: existingCheckIn, isLoading: checkingExisting } = useGetCheckInByDate(todayDate);
+  const { data: existingCheckIn, isLoading: checkingExisting } =
+    useGetCheckInByDate(todayDate);
   const submitMutation = useSubmitCheckIn();
 
   const [formData, setFormData] = useState({
@@ -31,7 +38,7 @@ export default function DailyCheckInPage() {
     actualFall: false,
   });
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (existingCheckIn) {
@@ -52,7 +59,7 @@ export default function DailyCheckInPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     const checkIn: DailyCheckIn = {
       ...formData,
@@ -62,7 +69,7 @@ export default function DailyCheckInPage() {
 
     try {
       await submitMutation.mutateAsync(checkIn);
-      navigate({ to: '/confirmation' });
+      navigate({ to: "/confirmation" });
     } catch (err) {
       setError(normalizeError(err));
     }
@@ -89,17 +96,18 @@ export default function DailyCheckInPage() {
         <Alert className="mb-6 bg-emerald-50 dark:bg-emerald-950 border-emerald-200 dark:border-emerald-800">
           <CheckCircle className="h-5 w-5 text-emerald-600" />
           <AlertDescription className="text-base text-emerald-900 dark:text-emerald-100">
-            You've already completed your check-in for today. Below are your submitted answers.
+            You've already completed your check-in for today. Below are your
+            submitted answers.
             <div className="mt-3">
               <PrimaryButton
-                onClick={() => navigate({ to: '/risk-results' })}
+                onClick={() => navigate({ to: "/risk-results" })}
                 variant="outline"
                 className="mr-3"
               >
                 View Risk Results
               </PrimaryButton>
               <PrimaryButton
-                onClick={() => navigate({ to: '/history' })}
+                onClick={() => navigate({ to: "/history" })}
                 variant="outline"
               >
                 View History
@@ -121,7 +129,9 @@ export default function DailyCheckInPage() {
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-5 w-5" />
-                <AlertDescription className="text-base">{error}</AlertDescription>
+                <AlertDescription className="text-base">
+                  {error}
+                </AlertDescription>
               </Alert>
             )}
 
@@ -130,7 +140,9 @@ export default function DailyCheckInPage() {
                 id="dizziness"
                 label="Have you felt dizzy or lightheaded?"
                 value={formData.dizziness}
-                onChange={(value) => setFormData({ ...formData, dizziness: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, dizziness: value })
+                }
                 disabled={alreadySubmitted}
               />
 
@@ -138,7 +150,9 @@ export default function DailyCheckInPage() {
                 id="unsteadiness"
                 label="Have you felt unsteady on your feet?"
                 value={formData.unsteadiness}
-                onChange={(value) => setFormData({ ...formData, unsteadiness: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, unsteadiness: value })
+                }
                 disabled={alreadySubmitted}
               />
 
@@ -146,7 +160,9 @@ export default function DailyCheckInPage() {
                 id="newPain"
                 label="Do you have any new pain or discomfort?"
                 value={formData.newPain}
-                onChange={(value) => setFormData({ ...formData, newPain: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, newPain: value })
+                }
                 disabled={alreadySubmitted}
               />
 
@@ -154,7 +170,9 @@ export default function DailyCheckInPage() {
                 id="fatigue"
                 label="Have you felt unusually tired or weak?"
                 value={formData.fatigue}
-                onChange={(value) => setFormData({ ...formData, fatigue: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, fatigue: value })
+                }
                 disabled={alreadySubmitted}
               />
 
@@ -162,7 +180,9 @@ export default function DailyCheckInPage() {
                 id="visionIssues"
                 label="Have you had any vision problems?"
                 value={formData.visionIssues}
-                onChange={(value) => setFormData({ ...formData, visionIssues: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, visionIssues: value })
+                }
                 disabled={alreadySubmitted}
               />
 
@@ -170,7 +190,9 @@ export default function DailyCheckInPage() {
                 id="medicationChanges"
                 label="Have you changed any medications today?"
                 value={formData.medicationChanges}
-                onChange={(value) => setFormData({ ...formData, medicationChanges: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, medicationChanges: value })
+                }
                 disabled={alreadySubmitted}
               />
 
@@ -178,7 +200,9 @@ export default function DailyCheckInPage() {
                 id="alcoholIntake"
                 label="Have you consumed alcohol today?"
                 value={formData.alcoholIntake}
-                onChange={(value) => setFormData({ ...formData, alcoholIntake: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, alcoholIntake: value })
+                }
                 disabled={alreadySubmitted}
               />
 
@@ -186,7 +210,9 @@ export default function DailyCheckInPage() {
                 id="sleepQualityGood"
                 label="Did you sleep well last night?"
                 value={formData.sleepQualityGood}
-                onChange={(value) => setFormData({ ...formData, sleepQualityGood: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, sleepQualityGood: value })
+                }
                 disabled={alreadySubmitted}
               />
 
@@ -194,7 +220,9 @@ export default function DailyCheckInPage() {
                 id="nearFall"
                 label="Have you had a near-fall (almost fell but caught yourself)?"
                 value={formData.nearFall}
-                onChange={(value) => setFormData({ ...formData, nearFall: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, nearFall: value })
+                }
                 disabled={alreadySubmitted}
               />
 
@@ -202,7 +230,9 @@ export default function DailyCheckInPage() {
                 id="actualFall"
                 label="Have you had an actual fall?"
                 value={formData.actualFall}
-                onChange={(value) => setFormData({ ...formData, actualFall: value })}
+                onChange={(value) =>
+                  setFormData({ ...formData, actualFall: value })
+                }
                 disabled={alreadySubmitted}
               />
             </div>
@@ -213,7 +243,7 @@ export default function DailyCheckInPage() {
                 disabled={submitMutation.isPending}
                 className="w-full"
               >
-                {submitMutation.isPending ? 'Submitting...' : 'Submit Check-In'}
+                {submitMutation.isPending ? "Submitting..." : "Submit Check-In"}
               </PrimaryButton>
             )}
           </form>
@@ -231,25 +261,31 @@ interface QuestionButtonsProps {
   disabled?: boolean;
 }
 
-function QuestionButtons({ id, label, value, onChange, disabled }: QuestionButtonsProps) {
+function QuestionButtons({
+  id,
+  label,
+  value,
+  onChange,
+  disabled,
+}: QuestionButtonsProps) {
   return (
     <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
       <Label htmlFor={id} className="text-lg block mb-3">
         {label}
       </Label>
-      <div className="flex gap-3" role="group" aria-labelledby={id}>
+      <div className="flex gap-3">
         <button
           type="button"
           onClick={() => onChange(true)}
           disabled={disabled}
           aria-pressed={value === true}
           className={cn(
-            'flex-1 min-h-[56px] px-6 py-3 rounded-lg font-semibold text-lg transition-all',
-            'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2',
-            'disabled:opacity-50 disabled:cursor-not-allowed',
+            "flex-1 min-h-[56px] px-6 py-3 rounded-lg font-semibold text-lg transition-all",
+            "focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+            "disabled:opacity-50 disabled:cursor-not-allowed",
             value === true
-              ? 'bg-emerald-600 text-white shadow-md hover:bg-emerald-700'
-              : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-2 border-gray-300 dark:border-gray-600 hover:border-emerald-500 dark:hover:border-emerald-500'
+              ? "bg-emerald-600 text-white shadow-md hover:bg-emerald-700"
+              : "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-2 border-gray-300 dark:border-gray-600 hover:border-emerald-500 dark:hover:border-emerald-500",
           )}
         >
           Yes
@@ -260,12 +296,12 @@ function QuestionButtons({ id, label, value, onChange, disabled }: QuestionButto
           disabled={disabled}
           aria-pressed={value === false}
           className={cn(
-            'flex-1 min-h-[56px] px-6 py-3 rounded-lg font-semibold text-lg transition-all',
-            'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2',
-            'disabled:opacity-50 disabled:cursor-not-allowed',
+            "flex-1 min-h-[56px] px-6 py-3 rounded-lg font-semibold text-lg transition-all",
+            "focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+            "disabled:opacity-50 disabled:cursor-not-allowed",
             value === false
-              ? 'bg-emerald-600 text-white shadow-md hover:bg-emerald-700'
-              : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-2 border-gray-300 dark:border-gray-600 hover:border-emerald-500 dark:hover:border-emerald-500'
+              ? "bg-emerald-600 text-white shadow-md hover:bg-emerald-700"
+              : "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-2 border-gray-300 dark:border-gray-600 hover:border-emerald-500 dark:hover:border-emerald-500",
           )}
         >
           No

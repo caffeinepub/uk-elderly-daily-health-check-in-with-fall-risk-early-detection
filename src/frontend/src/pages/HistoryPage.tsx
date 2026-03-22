@@ -1,11 +1,11 @@
-import { useNavigate } from '@tanstack/react-router';
-import { useGetRiskHistory } from '../hooks/useQueries';
-import { formatUKDate } from '../lib/ukDate';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ChevronRight } from 'lucide-react';
-import LoadingState from '../components/shared/LoadingState';
-import ErrorState from '../components/shared/ErrorState';
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate } from "@tanstack/react-router";
+import { ChevronRight } from "lucide-react";
+import ErrorState from "../components/shared/ErrorState";
+import LoadingState from "../components/shared/LoadingState";
+import { useGetRiskHistory } from "../hooks/useQueries";
+import { formatUKDate } from "../lib/ukDate";
 
 export default function HistoryPage() {
   const navigate = useNavigate();
@@ -16,7 +16,9 @@ export default function HistoryPage() {
   }
 
   if (error) {
-    return <ErrorState message="Failed to load history" onRetry={() => refetch()} />;
+    return (
+      <ErrorState message="Failed to load history" onRetry={() => refetch()} />
+    );
   }
 
   if (!history || history.length === 0) {
@@ -28,7 +30,8 @@ export default function HistoryPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p className="text-xl text-gray-700 dark:text-gray-300">
-              No check-ins yet. Complete your first daily check-in to start tracking your health.
+              No check-ins yet. Complete your first daily check-in to start
+              tracking your health.
             </p>
           </CardContent>
         </Card>
@@ -38,14 +41,14 @@ export default function HistoryPage() {
 
   const getRiskColor = (level: string) => {
     switch (level) {
-      case 'low':
-        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200';
-      case 'medium':
-        return 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200';
-      case 'high':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      case "low":
+        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200";
+      case "medium":
+        return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200";
+      case "high":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200";
     }
   };
 
@@ -61,10 +64,13 @@ export default function HistoryPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {history.map(([checkIn, assessment], index) => (
+            {history.map(([checkIn, assessment]) => (
               <button
-                key={index}
-                onClick={() => navigate({ to: `/history/${checkIn.localDate}` })}
+                type="button"
+                key={checkIn.localDate}
+                onClick={() =>
+                  navigate({ to: `/history/${checkIn.localDate}` })
+                }
                 className="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 <div className="flex items-center gap-4">

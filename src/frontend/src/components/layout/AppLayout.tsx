@@ -1,13 +1,22 @@
-import { useNavigate } from '@tanstack/react-router';
-import { useInternetIdentity } from '../../hooks/useInternetIdentity';
-import LoginButton from '../auth/LoginButton';
-import BrandHeader from '../branding/BrandHeader';
-import DisclaimerBanner from '../shared/DisclaimerBanner';
-import { Menu, Home, History, Settings, Info, FileText, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Separator } from '@/components/ui/separator';
-import { SiCaffeine } from 'react-icons/si';
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useNavigate } from "@tanstack/react-router";
+import {
+  BookOpen,
+  FileText,
+  History,
+  Home,
+  Info,
+  Menu,
+  Settings,
+  Shield,
+} from "lucide-react";
+import { SiCaffeine } from "react-icons/si";
+import { useInternetIdentity } from "../../hooks/useInternetIdentity";
+import LoginButton from "../auth/LoginButton";
+import BrandHeader from "../branding/BrandHeader";
+import DisclaimerBanner from "../shared/DisclaimerBanner";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -15,15 +24,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isAuthenticated = !!identity;
 
   const navItems = [
-    { label: 'Daily Check-In', path: '/', icon: Home },
-    { label: 'History', path: '/history', icon: History },
-    { label: 'Accessibility', path: '/accessibility', icon: Settings },
+    { label: "Daily Check-In", path: "/", icon: Home },
+    { label: "History", path: "/history", icon: History },
+    { label: "Accessibility", path: "/accessibility", icon: Settings },
   ];
 
   const infoItems = [
-    { label: 'About', path: '/about', icon: Info },
-    { label: 'How It Works', path: '/how-it-works', icon: FileText },
-    { label: 'Privacy', path: '/privacy', icon: Shield },
+    { label: "About", path: "/about", icon: Info },
+    { label: "How It Works", path: "/how-it-works", icon: FileText },
+    { label: "Privacy", path: "/privacy", icon: Shield },
+    { label: "App Document", path: "/document", icon: BookOpen },
   ];
 
   return (
@@ -32,7 +42,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <BrandHeader />
-            
+
             <div className="flex items-center gap-4">
               {isAuthenticated && (
                 <nav className="hidden md:flex items-center gap-2">
@@ -42,6 +52,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       variant="ghost"
                       onClick={() => navigate({ to: item.path })}
                       className="text-base"
+                      data-ocid={`nav.${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "_")}.link`}
                     >
                       <item.icon className="w-5 h-5 mr-2" />
                       {item.label}
@@ -49,13 +60,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   ))}
                 </nav>
               )}
-              
+
               <LoginButton />
-              
+
               {isAuthenticated && (
                 <Sheet>
                   <SheetTrigger asChild>
-                    <Button variant="outline" size="icon" className="md:hidden">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="md:hidden"
+                      data-ocid="nav.menu.button"
+                    >
                       <Menu className="h-6 w-6" />
                     </Button>
                   </SheetTrigger>
@@ -93,27 +109,27 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1 container mx-auto px-4 py-8">
-        {children}
-      </main>
+      <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
 
       <footer className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm border-t border-emerald-200 dark:border-gray-700 mt-auto">
         <div className="container mx-auto px-4 py-6">
           <DisclaimerBanner compact />
-          
+
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-sm text-gray-600 dark:text-gray-400">
             <nav className="flex flex-wrap gap-4">
               {infoItems.map((item) => (
                 <button
+                  type="button"
                   key={item.path}
                   onClick={() => navigate({ to: item.path })}
                   className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  data-ocid={`footer.${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "_")}.link`}
                 >
                   {item.label}
                 </button>
               ))}
             </nav>
-            
+
             <div className="flex items-center gap-2">
               <span>© {new Date().getFullYear()} FallCheck</span>
               <span>•</span>
@@ -123,7 +139,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
               >
-                Built with <SiCaffeine className="w-4 h-4 text-emerald-600" /> caffeine.ai
+                Built with <SiCaffeine className="w-4 h-4 text-emerald-600" />{" "}
+                caffeine.ai
               </a>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function PrivacyPage() {
   return (
@@ -13,20 +13,34 @@ export default function PrivacyPage() {
         </CardHeader>
         <CardContent className="prose prose-lg dark:prose-invert max-w-none">
           <p className="text-base leading-relaxed">
-            FallCheck is built with your privacy in mind. We store your data securely and never share 
-            it with third parties.
+            FallCheck is built with your privacy in mind. We store your data
+            securely and never share it with third parties.
           </p>
 
-          <h3 className="text-xl font-semibold mt-6 mb-3">What Data We Store</h3>
+          <h3 className="text-xl font-semibold mt-6 mb-3">
+            What Data We Store
+          </h3>
           <ul className="space-y-2 text-base">
-            <li><strong>Your profile:</strong> Age, optional health information, and mobility details</li>
-            <li><strong>Daily check-ins:</strong> Your answers to daily health questions</li>
-            <li><strong>Risk assessments:</strong> Calculated scores based on your check-ins</li>
+            <li>
+              <strong>Your profile:</strong> Age, optional health information,
+              and mobility details
+            </li>
+            <li>
+              <strong>Daily check-ins:</strong> Your answers to daily health
+              questions
+            </li>
+            <li>
+              <strong>Risk assessments:</strong> Calculated scores based on your
+              check-ins
+            </li>
           </ul>
 
-          <h3 className="text-xl font-semibold mt-6 mb-3">Where Your Data is Stored</h3>
+          <h3 className="text-xl font-semibold mt-6 mb-3">
+            Where Your Data is Stored
+          </h3>
           <p className="text-base leading-relaxed">
-            All your data is stored in a secure canister on the Internet Computer blockchain. This means:
+            All your data is stored in a secure canister on the Internet
+            Computer blockchain. This means:
           </p>
 
           <ul className="space-y-2 text-base">
@@ -38,7 +52,8 @@ export default function PrivacyPage() {
 
           <h3 className="text-xl font-semibold mt-6 mb-3">Authentication</h3>
           <p className="text-base leading-relaxed">
-            We use Internet Identity for secure, anonymous authentication. This means:
+            We use Internet Identity for secure, anonymous authentication. This
+            means:
           </p>
 
           <ul className="space-y-2 text-base">
@@ -48,10 +63,10 @@ export default function PrivacyPage() {
             <li>You control access to your data</li>
           </ul>
 
-          <h3 className="text-xl font-semibold mt-6 mb-3">No Third-Party Services</h3>
-          <p className="text-base leading-relaxed">
-            FallCheck does not use:
-          </p>
+          <h3 className="text-xl font-semibold mt-6 mb-3">
+            No Third-Party Services
+          </h3>
+          <p className="text-base leading-relaxed">FallCheck does not use:</p>
 
           <ul className="space-y-2 text-base">
             <li>Analytics or tracking services</li>
@@ -62,8 +77,9 @@ export default function PrivacyPage() {
 
           <h3 className="text-xl font-semibold mt-6 mb-3">UK Focus</h3>
           <p className="text-base leading-relaxed">
-            FallCheck is designed specifically for UK users and references UK healthcare services 
-            (GP, NHS 111). All guidance and recommendations are tailored to the UK healthcare system.
+            FallCheck is designed specifically for UK users and references UK
+            healthcare services (GP, NHS 111). All guidance and recommendations
+            are tailored to the UK healthcare system.
           </p>
 
           <h3 className="text-xl font-semibold mt-6 mb-3">Your Rights</h3>
@@ -78,8 +94,8 @@ export default function PrivacyPage() {
           </ul>
 
           <p className="text-base leading-relaxed mt-4">
-            If you have questions about privacy or data handling, please contact your healthcare provider 
-            for guidance on health data management.
+            If you have questions about privacy or data handling, please contact
+            your healthcare provider for guidance on health data management.
           </p>
         </CardContent>
       </Card>

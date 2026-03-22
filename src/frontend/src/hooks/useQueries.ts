@@ -1,16 +1,16 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useActor } from './useActor';
-import { useInternetIdentity } from './useInternetIdentity';
-import type { UserProfile, DailyCheckIn, RiskAssessment } from '../backend';
-import { Principal } from '@dfinity/principal';
+import { Principal } from "@dfinity/principal";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { DailyCheckIn, RiskAssessment, UserProfile } from "../backend";
+import { useActor } from "./useActor";
+import { useInternetIdentity } from "./useInternetIdentity";
 
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
 
   const query = useQuery<UserProfile | null>({
-    queryKey: ['currentUserProfile'],
+    queryKey: ["currentUserProfile"],
     queryFn: async () => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) throw new Error("Actor not available");
       return actor.getCallerUserProfile();
     },
     enabled: !!actor && !actorFetching,
@@ -30,11 +30,11 @@ export function useSaveCallerUserProfile() {
 
   return useMutation({
     mutationFn: async (profile: UserProfile) => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) throw new Error("Actor not available");
       return actor.saveCallerUserProfile(profile);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+      queryClient.invalidateQueries({ queryKey: ["currentUserProfile"] });
     },
   });
 }
@@ -45,14 +45,14 @@ export function useSubmitCheckIn() {
 
   return useMutation({
     mutationFn: async (checkIn: DailyCheckIn) => {
-      if (!actor) throw new Error('Actor not available');
+      if (!actor) throw new Error("Actor not available");
       return actor.submitCheckIn(checkIn);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['checkIns'] });
-      queryClient.invalidateQueries({ queryKey: ['checkInByDate'] });
-      queryClient.invalidateQueries({ queryKey: ['currentRiskAssessment'] });
-      queryClient.invalidateQueries({ queryKey: ['riskHistory'] });
+      queryClient.invalidateQueries({ queryKey: ["checkIns"] });
+      queryClient.invalidateQueries({ queryKey: ["checkInByDate"] });
+      queryClient.invalidateQueries({ queryKey: ["currentRiskAssessment"] });
+      queryClient.invalidateQueries({ queryKey: ["riskHistory"] });
     },
   });
 }
@@ -61,7 +61,7 @@ export function useGetCheckInByDate(date: string) {
   const { actor, isFetching: actorFetching } = useActor();
 
   return useQuery<DailyCheckIn | null>({
-    queryKey: ['checkInByDate', date],
+    queryKey: ["checkInByDate", date],
     queryFn: async () => {
       if (!actor) return null;
       return actor.getCheckInByDate(date);
@@ -70,11 +70,11 @@ export function useGetCheckInByDate(date: string) {
   });
 }
 
-export function useGetCallerCheckIns(limit: number = 30) {
+export function useGetCallerCheckIns(limit = 30) {
   const { actor, isFetching: actorFetching } = useActor();
 
   return useQuery<DailyCheckIn[]>({
-    queryKey: ['checkIns', limit],
+    queryKey: ["checkIns", limit],
     queryFn: async () => {
       if (!actor) return [];
       return actor.getCallerCheckIns(BigInt(limit));
@@ -87,7 +87,7 @@ export function useGetCurrentRiskAssessment() {
   const { actor, isFetching: actorFetching } = useActor();
 
   return useQuery<RiskAssessment | null>({
-    queryKey: ['currentRiskAssessment'],
+    queryKey: ["currentRiskAssessment"],
     queryFn: async () => {
       if (!actor) return null;
       return actor.getCurrentRiskAssessment();
@@ -96,12 +96,12 @@ export function useGetCurrentRiskAssessment() {
   });
 }
 
-export function useGetRiskHistory(limit: number = 30) {
+export function useGetRiskHistory(limit = 30) {
   const { actor, isFetching: actorFetching } = useActor();
   const { identity } = useInternetIdentity();
 
   return useQuery<Array<[DailyCheckIn, RiskAssessment]>>({
-    queryKey: ['riskHistory', limit],
+    queryKey: ["riskHistory", limit],
     queryFn: async () => {
       if (!actor || !identity) return [];
       const principal = Principal.fromText(identity.getPrincipal().toString());

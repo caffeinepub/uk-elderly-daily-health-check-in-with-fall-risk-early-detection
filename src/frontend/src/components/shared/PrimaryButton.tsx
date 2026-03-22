@@ -1,9 +1,13 @@
-import { Button } from '@/components/ui/button';
-import { ComponentProps } from 'react';
+import { Button } from "@/components/ui/button";
+import type { ComponentProps } from "react";
 
 type PrimaryButtonProps = ComponentProps<typeof Button>;
 
-export default function PrimaryButton({ children, className = '', ...props }: PrimaryButtonProps) {
+export default function PrimaryButton({
+  children,
+  className = "",
+  ...props
+}: PrimaryButtonProps) {
   return (
     <Button
       size="lg"

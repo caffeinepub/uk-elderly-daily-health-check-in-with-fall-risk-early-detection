@@ -1,7 +1,14 @@
-import { createContext, useContext, useEffect, useState, ReactNode, createElement } from 'react';
+import {
+  type ReactNode,
+  createContext,
+  createElement,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
-type TextSize = 'normal' | 'large' | 'largest';
-type ContrastMode = 'normal' | 'high';
+type TextSize = "normal" | "large" | "largest";
+type ContrastMode = "normal" | "high";
 
 interface AccessibilitySettings {
   textSize: TextSize;
@@ -10,7 +17,9 @@ interface AccessibilitySettings {
   setContrastMode: (mode: ContrastMode) => void;
 }
 
-const AccessibilityContext = createContext<AccessibilitySettings | undefined>(undefined);
+const AccessibilityContext = createContext<AccessibilitySettings | undefined>(
+  undefined,
+);
 
 interface AccessibilityProviderProps {
   children: ReactNode;
@@ -18,34 +27,34 @@ interface AccessibilityProviderProps {
 
 export function AccessibilityProvider(props: AccessibilityProviderProps) {
   const [textSize, setTextSizeState] = useState<TextSize>(() => {
-    const saved = localStorage.getItem('accessibility-text-size');
-    return (saved as TextSize) || 'normal';
+    const saved = localStorage.getItem("accessibility-text-size");
+    return (saved as TextSize) || "normal";
   });
 
   const [contrastMode, setContrastModeState] = useState<ContrastMode>(() => {
-    const saved = localStorage.getItem('accessibility-contrast-mode');
-    return (saved as ContrastMode) || 'normal';
+    const saved = localStorage.getItem("accessibility-contrast-mode");
+    return (saved as ContrastMode) || "normal";
   });
 
   const setTextSize = (size: TextSize) => {
     setTextSizeState(size);
-    localStorage.setItem('accessibility-text-size', size);
+    localStorage.setItem("accessibility-text-size", size);
   };
 
   const setContrastMode = (mode: ContrastMode) => {
     setContrastModeState(mode);
-    localStorage.setItem('accessibility-contrast-mode', mode);
+    localStorage.setItem("accessibility-contrast-mode", mode);
   };
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('text-normal', 'text-large', 'text-largest');
+    root.classList.remove("text-normal", "text-large", "text-largest");
     root.classList.add(`text-${textSize}`);
   }, [textSize]);
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('contrast-normal', 'contrast-high');
+    root.classList.remove("contrast-normal", "contrast-high");
     root.classList.add(`contrast-${contrastMode}`);
   }, [contrastMode]);
 
@@ -59,14 +68,16 @@ export function AccessibilityProvider(props: AccessibilityProviderProps) {
   return createElement(
     AccessibilityContext.Provider,
     { value },
-    props.children
+    props.children,
   );
 }
 
 export function useAccessibilitySettings(): AccessibilitySettings {
   const context = useContext(AccessibilityContext);
   if (!context) {
-    throw new Error('useAccessibilitySettings must be used within AccessibilityProvider');
+    throw new Error(
+      "useAccessibilitySettings must be used within AccessibilityProvider",
+    );
   }
   return context;
 }

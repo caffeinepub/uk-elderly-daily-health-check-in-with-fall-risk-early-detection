@@ -3,139 +3,162 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --radius: 0.75rem;
-        
-        /* Warm, accessible green/teal palette for elderly users */
-        --background: 0.98 0.01 150;
-        --foreground: 0.20 0.02 150;
-        --card: 1 0 0;
-        --card-foreground: 0.20 0.02 150;
-        --popover: 1 0 0;
-        --popover-foreground: 0.20 0.02 150;
-        
-        /* Primary: Emerald/Teal (not blue/purple) */
-        --primary: 0.55 0.15 165;
-        --primary-foreground: 0.98 0.01 165;
-        
-        /* Secondary: Warm neutral */
-        --secondary: 0.92 0.02 150;
-        --secondary-foreground: 0.30 0.02 150;
-        
-        --muted: 0.94 0.02 150;
-        --muted-foreground: 0.50 0.02 150;
-        
-        --accent: 0.88 0.03 165;
-        --accent-foreground: 0.25 0.02 165;
-        
-        --destructive: 0.55 0.22 25;
-        --destructive-foreground: 0.98 0.01 25;
-        
-        --border: 0.88 0.02 150;
-        --input: 0.88 0.02 150;
-        --ring: 0.55 0.15 165;
-        
-        --chart-1: 0.60 0.18 165;
-        --chart-2: 0.65 0.16 140;
-        --chart-3: 0.70 0.14 180;
-        --chart-4: 0.55 0.20 150;
-        --chart-5: 0.50 0.18 170;
-    }
+  :root {
+    --radius: 0.75rem;
 
-    .dark {
-        --background: 0.18 0.02 150;
-        --foreground: 0.95 0.01 150;
-        --card: 0.22 0.02 150;
-        --card-foreground: 0.95 0.01 150;
-        --popover: 0.20 0.02 150;
-        --popover-foreground: 0.95 0.01 150;
-        
-        --primary: 0.65 0.16 165;
-        --primary-foreground: 0.15 0.02 165;
-        
-        --secondary: 0.28 0.02 150;
-        --secondary-foreground: 0.92 0.01 150;
-        
-        --muted: 0.26 0.02 150;
-        --muted-foreground: 0.65 0.02 150;
-        
-        --accent: 0.32 0.03 165;
-        --accent-foreground: 0.92 0.01 165;
-        
-        --destructive: 0.60 0.20 25;
-        --destructive-foreground: 0.95 0.01 25;
-        
-        --border: 0.30 0.02 150;
-        --input: 0.30 0.02 150;
-        --ring: 0.60 0.16 165;
-        
-        --chart-1: 0.65 0.18 165;
-        --chart-2: 0.70 0.16 140;
-        --chart-3: 0.75 0.14 180;
-        --chart-4: 0.60 0.20 150;
-        --chart-5: 0.55 0.18 170;
-    }
+    /* Warm, accessible green/teal palette for elderly users */
+    --background: 0.98 0.01 150;
+    --foreground: 0.2 0.02 150;
+    --card: 1 0 0;
+    --card-foreground: 0.2 0.02 150;
+    --popover: 1 0 0;
+    --popover-foreground: 0.2 0.02 150;
 
-    * {
-        @apply border-border;
-    }
-    
-    body {
-        @apply bg-background text-foreground;
-        font-feature-settings: "rlig" 1, "calt" 1;
-    }
-    
-    /* Base typography optimized for older adults */
-    html {
-        font-size: 16px;
-        line-height: 1.6;
-    }
-    
-    /* Text size variants */
-    .text-normal {
-        font-size: 16px;
-    }
-    
-    .text-large {
-        font-size: 18px;
-    }
-    
-    .text-large h1 { font-size: 2.75rem; }
-    .text-large h2 { font-size: 2rem; }
-    .text-large h3 { font-size: 1.5rem; }
-    .text-large p, .text-large li, .text-large label { font-size: 1.125rem; }
-    
-    .text-largest {
-        font-size: 20px;
-    }
-    
-    .text-largest h1 { font-size: 3rem; }
-    .text-largest h2 { font-size: 2.25rem; }
-    .text-largest h3 { font-size: 1.75rem; }
-    .text-largest p, .text-largest li, .text-largest label { font-size: 1.25rem; }
-    
-    /* High contrast mode */
-    .contrast-high {
-        --foreground: 0.10 0.02 150;
-        --background: 1 0 0;
-        --border: 0.30 0.02 150;
-    }
-    
-    .contrast-high.dark {
-        --foreground: 1 0 0;
-        --background: 0.10 0.02 150;
-        --border: 0.70 0.02 150;
-    }
-    
-    /* Ensure minimum touch target sizes (48x48px) */
-    button, a, input, select, textarea {
-        min-height: 44px;
-    }
-    
-    /* Improve focus visibility */
-    *:focus-visible {
-        outline: 3px solid oklch(var(--ring));
-        outline-offset: 2px;
-    }
+    /* Primary: Emerald/Teal (not blue/purple) */
+    --primary: 0.55 0.15 165;
+    --primary-foreground: 0.98 0.01 165;
+
+    /* Secondary: Warm neutral */
+    --secondary: 0.92 0.02 150;
+    --secondary-foreground: 0.3 0.02 150;
+
+    --muted: 0.94 0.02 150;
+    --muted-foreground: 0.5 0.02 150;
+
+    --accent: 0.88 0.03 165;
+    --accent-foreground: 0.25 0.02 165;
+
+    --destructive: 0.55 0.22 25;
+    --destructive-foreground: 0.98 0.01 25;
+
+    --border: 0.88 0.02 150;
+    --input: 0.88 0.02 150;
+    --ring: 0.55 0.15 165;
+
+    --chart-1: 0.6 0.18 165;
+    --chart-2: 0.65 0.16 140;
+    --chart-3: 0.7 0.14 180;
+    --chart-4: 0.55 0.2 150;
+    --chart-5: 0.5 0.18 170;
+  }
+
+  .dark {
+    --background: 0.18 0.02 150;
+    --foreground: 0.95 0.01 150;
+    --card: 0.22 0.02 150;
+    --card-foreground: 0.95 0.01 150;
+    --popover: 0.2 0.02 150;
+    --popover-foreground: 0.95 0.01 150;
+
+    --primary: 0.65 0.16 165;
+    --primary-foreground: 0.15 0.02 165;
+
+    --secondary: 0.28 0.02 150;
+    --secondary-foreground: 0.92 0.01 150;
+
+    --muted: 0.26 0.02 150;
+    --muted-foreground: 0.65 0.02 150;
+
+    --accent: 0.32 0.03 165;
+    --accent-foreground: 0.92 0.01 165;
+
+    --destructive: 0.6 0.2 25;
+    --destructive-foreground: 0.95 0.01 25;
+
+    --border: 0.3 0.02 150;
+    --input: 0.3 0.02 150;
+    --ring: 0.6 0.16 165;
+
+    --chart-1: 0.65 0.18 165;
+    --chart-2: 0.7 0.16 140;
+    --chart-3: 0.75 0.14 180;
+    --chart-4: 0.6 0.2 150;
+    --chart-5: 0.55 0.18 170;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Base typography optimized for older adults */
+  html {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* Text size variants */
+  .text-normal {
+    font-size: 16px;
+  }
+
+  .text-large {
+    font-size: 18px;
+  }
+
+  .text-large h1 {
+    font-size: 2.75rem;
+  }
+  .text-large h2 {
+    font-size: 2rem;
+  }
+  .text-large h3 {
+    font-size: 1.5rem;
+  }
+  .text-large p,
+  .text-large li,
+  .text-large label {
+    font-size: 1.125rem;
+  }
+
+  .text-largest {
+    font-size: 20px;
+  }
+
+  .text-largest h1 {
+    font-size: 3rem;
+  }
+  .text-largest h2 {
+    font-size: 2.25rem;
+  }
+  .text-largest h3 {
+    font-size: 1.75rem;
+  }
+  .text-largest p,
+  .text-largest li,
+  .text-largest label {
+    font-size: 1.25rem;
+  }
+
+  /* High contrast mode */
+  .contrast-high {
+    --foreground: 0.1 0.02 150;
+    --background: 1 0 0;
+    --border: 0.3 0.02 150;
+  }
+
+  .contrast-high.dark {
+    --foreground: 1 0 0;
+    --background: 0.1 0.02 150;
+    --border: 0.7 0.02 150;
+  }
+
+  /* Ensure minimum touch target sizes (48x48px) */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+  }
+
+  /* Improve focus visibility */
+  *:focus-visible {
+    outline: 3px solid oklch(var(--ring));
+    outline-offset: 2px;
+  }
 }
-

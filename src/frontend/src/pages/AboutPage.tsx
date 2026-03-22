@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import DisclaimerBanner from '../components/shared/DisclaimerBanner';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import DisclaimerBanner from "../components/shared/DisclaimerBanner";
 
 export default function AboutPage() {
   return (
@@ -14,15 +14,17 @@ export default function AboutPage() {
         </CardHeader>
         <CardContent className="prose prose-lg dark:prose-invert max-w-none">
           <p className="text-base leading-relaxed">
-            FallCheck is a daily health companion designed specifically for adults aged 65 and over in the UK. 
-            Our goal is to help you track your daily health status and identify potential fall risks early, 
-            so you can take preventive action and stay safe at home.
+            FallCheck is a daily health companion designed specifically for
+            adults aged 65 and over in the UK. Our goal is to help you track
+            your daily health status and identify potential fall risks early, so
+            you can take preventive action and stay safe at home.
           </p>
 
           <p className="text-base leading-relaxed">
-            Falls are a leading cause of injury among older adults, but many falls can be prevented with 
-            early awareness and simple precautions. By completing a quick daily check-in, you can monitor 
-            changes in your health that may increase your fall risk.
+            Falls are a leading cause of injury among older adults, but many
+            falls can be prevented with early awareness and simple precautions.
+            By completing a quick daily check-in, you can monitor changes in
+            your health that may increase your fall risk.
           </p>
 
           <h3 className="text-xl font-semibold mt-6 mb-3">What We Do</h3>

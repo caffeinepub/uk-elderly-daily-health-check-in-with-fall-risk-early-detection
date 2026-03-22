@@ -1,24 +1,38 @@
-import { useNavigate } from '@tanstack/react-router';
-import { useGetCurrentRiskAssessment } from '../hooks/useQueries';
-import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft } from 'lucide-react';
-import PrimaryButton from '../components/shared/PrimaryButton';
-import RiskSummaryCard from '../components/risk/RiskSummaryCard';
-import DisclaimerBanner from '../components/shared/DisclaimerBanner';
-import LoadingState from '../components/shared/LoadingState';
-import ErrorState from '../components/shared/ErrorState';
-import { LOW_RISK_GUIDANCE, MEDIUM_RISK_GUIDANCE, HIGH_RISK_GUIDANCE } from '../content/guidance';
+import { Card, CardContent } from "@/components/ui/card";
+import { useNavigate } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
+import RiskSummaryCard from "../components/risk/RiskSummaryCard";
+import DisclaimerBanner from "../components/shared/DisclaimerBanner";
+import ErrorState from "../components/shared/ErrorState";
+import LoadingState from "../components/shared/LoadingState";
+import PrimaryButton from "../components/shared/PrimaryButton";
+import {
+  HIGH_RISK_GUIDANCE,
+  LOW_RISK_GUIDANCE,
+  MEDIUM_RISK_GUIDANCE,
+} from "../content/guidance";
+import { useGetCurrentRiskAssessment } from "../hooks/useQueries";
 
 export default function RiskResultsPage() {
   const navigate = useNavigate();
-  const { data: assessment, isLoading, error, refetch } = useGetCurrentRiskAssessment();
+  const {
+    data: assessment,
+    isLoading,
+    error,
+    refetch,
+  } = useGetCurrentRiskAssessment();
 
   if (isLoading) {
     return <LoadingState message="Calculating your risk assessment..." />;
   }
 
   if (error) {
-    return <ErrorState message="Failed to load risk assessment" onRetry={() => refetch()} />;
+    return (
+      <ErrorState
+        message="Failed to load risk assessment"
+        onRetry={() => refetch()}
+      />
+    );
   }
 
   if (!assessment) {
@@ -27,9 +41,10 @@ export default function RiskResultsPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-6">
-              No risk assessment available. Please complete a daily check-in first.
+              No risk assessment available. Please complete a daily check-in
+              first.
             </p>
-            <PrimaryButton onClick={() => navigate({ to: '/' })}>
+            <PrimaryButton onClick={() => navigate({ to: "/" })}>
               Go to Daily Check-In
             </PrimaryButton>
           </CardContent>
@@ -40,14 +55,14 @@ export default function RiskResultsPage() {
 
   const getGuidance = () => {
     switch (assessment.riskLevel) {
-      case 'low':
+      case "low":
         return LOW_RISK_GUIDANCE;
-      case 'medium':
+      case "medium":
         return MEDIUM_RISK_GUIDANCE;
-      case 'high':
+      case "high":
         return HIGH_RISK_GUIDANCE;
       default:
-        return '';
+        return "";
     }
   };
 
@@ -55,7 +70,7 @@ export default function RiskResultsPage() {
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="mb-6">
         <PrimaryButton
-          onClick={() => navigate({ to: '/' })}
+          onClick={() => navigate({ to: "/" })}
           variant="ghost"
           className="mb-4"
         >
@@ -88,16 +103,13 @@ export default function RiskResultsPage() {
 
       <div className="flex gap-3">
         <PrimaryButton
-          onClick={() => navigate({ to: '/history' })}
+          onClick={() => navigate({ to: "/history" })}
           variant="outline"
           className="flex-1"
         >
           View History
         </PrimaryButton>
-        <PrimaryButton
-          onClick={() => navigate({ to: '/' })}
-          className="flex-1"
-        >
+        <PrimaryButton onClick={() => navigate({ to: "/" })} className="flex-1">
           New Check-In
         </PrimaryButton>
       </div>
